@@ -1,43 +1,34 @@
 package com.hz;
 
+import com.hz.strategy.DiscountStrategy;
+import com.hz.strategy.StrategyBlackFriday;
+import com.hz.strategy.StrategyChristmasEve;
+import com.hz.strategy.StrategyNoAction;
 import products.Product;
+
+import java.util.HashMap;
 
 public class DiscountCalculator {
 
     private Customer customer;
 
-    public void setChristmasEve(boolean christmasEve) {
-        isChristmasEve = christmasEve;
-    }
+    private SalesAction action;
 
-    private boolean isChristmasEve;
+    private HashMap<SalesAction, DiscountStrategy> actions;
 
-    public DiscountCalculator(Customer customer) {
+    public DiscountCalculator(Customer customer){
         this.customer = customer;
+        actions = new HashMap<SalesAction, DiscountStrategy>();
+        actions.put(SalesAction.NoAction, new StrategyNoAction());
+        actions.put(SalesAction.ChristmasEve, new StrategyChristmasEve());
+        actions.put(SalesAction.BlackFriday, new StrategyBlackFriday());
     }
 
-    public double getDiscount(Product product, int index) {
+    public void setAction(SalesAction action) {
+        this.action = action;
+    }
 
-        double discount = 0.0;
-
-        boolean isFirstProduct = index == 0;
-
-        // on Christmas Eve, 1st product 20%, the next 12.5% discount
-        if(isChristmasEve) {
-
-            if(isFirstProduct) {
-                discount = .20;
-            } else {
-                discount = .125;
-            }
-
-        }
-
-        // Default situation: new customers full price, regular 15% off
-        else if(customer.isRegular()) {
-            discount = .15;
-        }
-
-        return 1 - discount;
+    public double getDiscount(Product product, int index, int productCount) {
+        return 1 - this.actions.get(this.action).getDiscount(this.customer, index, productCount);
     }
 }

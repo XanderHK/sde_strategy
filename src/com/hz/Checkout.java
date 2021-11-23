@@ -12,9 +12,7 @@ public class Checkout {
 
         // init checkout
         DiscountCalculator discountCalculator = new DiscountCalculator(customer);
-        if(salesAction == SalesAction.ChristmasEve) {
-            discountCalculator.setChristmasEve(true);
-        }
+        discountCalculator.setAction(this.salesAction);
 
         // Welcome customer
         String welcome = String.format("Hello %s, would you pass me your shopping cart?",

@@ -13,7 +13,7 @@ public class ShoppingCart extends ArrayList<Product> {
 
             int index = this.indexOf(product);
 
-            double discount = discountCalculator.getDiscount(product, index);
+            double discount = discountCalculator.getDiscount(product, index, this.size());
             double price = product.getPrice() * discount;
 
             totalPrice += price;
